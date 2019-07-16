@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}  {% endblock %}</title>
+  </head>
+  <body>
+
+    {% if user.is_authenticated %}
+    <a href="{% url 'logout' %}">logout</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="{% url 'signup' %}">Sign Up</a> &nbsp;&nbsp;&nbsp;&nbsp;
+    {% endif %}
+
+    {% block content %}  {% endblock %}
+  </body>
+</html>
