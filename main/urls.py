@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import LoginView
-from accounts.views import SignUpView
+from hotels.views import SignUpView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -10,4 +10,6 @@ urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'), # new
     path('', include('django.contrib.auth.urls')), # new
     path('', include('hotels.urls')),
+    path('api/', include('apis.urls')),
+    path('api-auth/', include('rest_framework.urls')),
 ]

@@ -6,4 +6,5 @@ app_name = 'hotels'
 
 urlpatterns = [
     path('', views.home, name="home"),
+    path('countr', views.count_reservations),
 ]
