@@ -6,6 +6,8 @@ from rest_framework import generics
 from .serializers import UserSerializer, HotelSerializer, RoomSerializer, ClassificationSerializer, ReservationSerializer
 from django.contrib.auth import get_user_model
 from hotels.models import Hotel, Room, Classification, Reservation
+import django_filters.rest_framework
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 
@@ -13,6 +15,9 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['username', 'email']
+    search_fields = ['^username', '^email']
 
 #######################################################3
 
@@ -21,6 +26,9 @@ class HotelViewSet(viewsets.ModelViewSet):
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name', 'stars']
+    search_fields = ['^name', '=stars']
 
 
 class DeletedHotelViewSet(viewsets.ModelViewSet):
@@ -36,12 +44,18 @@ class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['number', 'hotel', 'is_avaliable', 'price', 'classification']
+    search_fields = ['=number', '=hotel', '=is_avaliable', 'price', '=classification']
 
 
 class AvailableRoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.filter(is_avaliable=True).all()
     serializer_class = RoomSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['number', 'hotel', 'price', 'classification']
+    search_fields = ['=number', '=hotel', 'price', '=classification']
 
 
 class DeletedRoomViewSet(viewsets.ModelViewSet):
@@ -58,6 +72,9 @@ class ClassificationViewSet(viewsets.ModelViewSet):
     queryset = Classification.objects.all()
     serializer_class = ClassificationSerializer
     permission_classes = (permissions.IsAdminUser,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name', 'price']
+    search_fields = ['=name', '=price']
 
 
 class DeletedClassificationViewSet(viewsets.ModelViewSet):
@@ -72,6 +89,9 @@ class DeletedClassificationViewSet(viewsets.ModelViewSet):
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['room', 'user', 'created_at', 'started_at', 'expired_at']
+    search_fields = ['=room', '=user', 'created_at', 'started_at', 'expired_at']
     # permission_classes = (permissions.IsAuthenticated,)
 
     """ making room availablr for future reservations"""
