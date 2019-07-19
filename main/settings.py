@@ -136,8 +136,8 @@ USE_TZ = True
 
 
 
-CELERY_BROKER_URL = 'redis://localhost:6380/2'
-CELERY_RESULT_BACKEND = 'redis://localhost:6380'
+CELERY_BROKER_URL = 'redis://localhost:6379/2'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 # CELERY_ACCEPT_CONTENT = ['application/json']
 # CELERY_TASK_SERIALIZER = 'json'
 # CELERY_RESULT_SERIALIZER = 'json'
@@ -148,11 +148,11 @@ CELERY_TIMEZONE = TIME_ZONE
 
 SEND_GRID_API_KEY = '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'
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'akramakh'
-EMAIL_HOST_PASSWORD = 'Akram5527040!@#' #sendgrid email
+EMAIL_HOST_USER = 'yourusername'
+EMAIL_HOST_PASSWORD = 'your_password' #sendgrid email
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'aa6653312@gmail.com' #sendgrig email
+DEFAULT_FROM_EMAIL = 'example@mail.com' #sendgrig email
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
