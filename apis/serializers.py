@@ -216,7 +216,32 @@ class ReservationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Reservation
         fields = ("id", "url", "user", "room", "paid", "created_at", "started_at", "expired_at")
+        extra_kwargs = {'expired_at': {'read_only':True}}
 
+    def update(self, context, data):
+        if not data['user']:
+            raise serializers.ValidationError('User Field Must be Provided')
+        if not data['room']:
+            raise serializers.ValidationError('Room Field Must be Provided')
+        if not data['paid']:
+            raise serializers.ValidationError('Paid Field Must be Provided')
+        else:
+            if data['paid'] < 0:
+                raise serializers.ValidationError('Paid Value must be PPOSITIVE')
+            elif data['paid'] < data['room'].price:
+                raise serializers.ValidationError('Paid Value must be equal or greater than Room price')
+        # if not data['room'].is_avaliable and context.room.is_avaliable:
+        #     raise serializers.ValidationError('This Room is not available now')
+
+        context.room = data['room']
+        context.user = data['user']
+        context.paid = data['paid']
+        context.started_at = data['started_at']
+        context.expired_at = context.started_at + timedelta(days=1)
+        room = context.room
+        room.is_avaliable = False
+        room.save()
+        return context
 
     def create(self, data):
         if not data['user']:
@@ -232,13 +257,18 @@ class ReservationSerializer(serializers.HyperlinkedModelSerializer):
                 raise serializers.ValidationError('Paid Value must be equal or greater than Room price')
         if not data['room'].is_avaliable:
             raise serializers.ValidationError('This Room is not available now')
+        r = Reservation.objects.filter(room=data['room'], user=data['user']).first()
+        if r:
+            raise serializers.ValidationError('this user is already reserving this room')
 
-        data['expired_at'] = data['started_at'] + timedelta(hours=24)
+        data['expired_at'] = data['started_at'] + timedelta(days=1)
+
         room = data['room']
         room.is_avaliable = False
         room.save()
         reservation = Reservation.objects.create(**data)
         return reservation
+
 
 
     def delete(self, request, pk, format=None):

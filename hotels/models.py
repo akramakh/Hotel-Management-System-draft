@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from safedelete.models import SafeDeleteModel
-from safedelete.models import SOFT_DELETE_CASCADE
+from safedelete.models import SOFT_DELETE_CASCADE, HARD_DELETE
 from safedelete import DELETED_VISIBLE_BY_PK
 from django.contrib.auth import get_user_model
 from datetime import datetime, timedelta
@@ -68,7 +68,7 @@ class Room(SafeDeleteModel):
 
 class Reservation(SafeDeleteModel):
     """docstring for Room."""
-    _safedelete_policy = SOFT_DELETE_CASCADE
+    _safedelete_policy = HARD_DELETE
     _safedelete_visibility = DELETED_VISIBLE_BY_PK
 
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
@@ -76,7 +76,7 @@ class Reservation(SafeDeleteModel):
     paid = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     started_at = models.DateTimeField()
-    expired_at = models.DateTimeField(default=None, blank=True, null=True)
+    expired_at = models.DateTimeField()
 
     class Meta:
         unique_together = ('user', 'room',)
